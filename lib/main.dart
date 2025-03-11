@@ -13,11 +13,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login', // Set login as the initial route
+      initialRoute: '/login',
       routes: {
         '/login': (context) => LoginPage(),
         '/main': (context) => MainScreen(),
       },
+      theme: ThemeData(
+        scaffoldBackgroundColor: Color(0xFFF5F5DC), // Beige background
+      ),
     );
   }
 }
@@ -43,19 +46,25 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.android), label: 'AI'),
-          BottomNavigationBarItem(icon: Icon(Icons.update), label: 'Updates'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
-    );
-  }
+ Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.blue[700], // Blue background for the main screen
+    body: _pages[_selectedIndex],
+
+    bottomNavigationBar: BottomNavigationBar(
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.android), label: 'AI'),
+        BottomNavigationBarItem(icon: Icon(Icons.update), label: 'Updates'),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.blue,
+      backgroundColor: Color(0xFFD2E3FF), // Makes the navbar transparent
+      elevation: 0, // Removes shadow to fully blend with background
+      onTap: _onItemTapped,
+      selectedLabelStyle: TextStyle(fontWeight: FontWeight.w900), // Bold selected text
+      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w900), // Bold unselected text
+    ),
+  );
+}
 }

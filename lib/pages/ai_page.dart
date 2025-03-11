@@ -6,82 +6,116 @@ class AIPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Artificial Intelligence"),
-        actions: [
-          IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+      body: Stack(
+        children: [
+          // Gradient Background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFEEE6FF), Color(0xFFD2E3FF)], // Light purple to blue gradient
+              ),
+            ),
+          ),
+          
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0), // Better padding
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    "Artificial Intelligence",
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Description
+                  Text(
+                    "Explore AI-powered features like virtual assistance and smart camera/mic tools.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // AI Companion Section
+                  _buildFeatureCard(
+                    context,
+                    title: "AI Companion",
+                    icon: Icons.smart_toy,
+                    color: Colors.blueAccent,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AICompanionPage()),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Camera/Mic Section
+                  _buildFeatureCard(
+                    context,
+                    title: "Camera / Mic",
+                    icon: Icons.camera_alt,
+                    color: Colors.green,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CameraMicPage()),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    );
+  }
+
+  // 📌 Feature Card with Glassmorphism Effect
+  Widget _buildFeatureCard(BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.8), // Glassmorphism effect
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+        child: Row(
           children: [
-            // AI Companion Section (Clickable)
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AICompanionPage()),
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Icon(Icons.smart_toy, size: 40, color: Colors.blue),
-                    SizedBox(width: 10),
-                    Text("AI Companion", style: TextStyle(fontSize: 18)),
-                  ],
-                ),
-              ),
+            CircleAvatar(
+              backgroundColor: color.withOpacity(0.1),
+              radius: 30,
+              child: Icon(icon, size: 32, color: color),
             ),
-            SizedBox(height: 16),
-
-            // Camera/Mic Section (Clickable)
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CameraMicPage()),
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.green[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Icon(Icons.camera_alt, size: 40, color: Colors.green),
-                    SizedBox(width: 10),
-                    Text("Camera / Mic", style: TextStyle(fontSize: 18)),
-                  ],
-                ),
-              ),
+            const SizedBox(width: 16),
+            Text(
+              title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
-            SizedBox(height: 16),
-
-            // // Reservation Section
-            // Container(
-            //   decoration: BoxDecoration(
-            //     color: Colors.purple[100],
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            //   padding: EdgeInsets.all(16),
-            //   child: Row(
-            //     children: [
-            //       Icon(Icons.calendar_today, size: 40, color: Colors.purple),
-            //       SizedBox(width: 10),
-            //       Text("Reservation with ASD Professional", style: TextStyle(fontSize: 16)),
-            //     ],
-            //   ),
-            // ),
+            Spacer(),
+            Icon(Icons.arrow_forward_ios, size: 20, color: Colors.black45),
           ],
         ),
       ),

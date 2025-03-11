@@ -1,92 +1,140 @@
 import 'package:flutter/material.dart';
+import '/pages/setting_page.dart';
 
-// Home Page
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // Key to control the drawer
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign key
-      backgroundColor: Colors.grey[200],
-      drawer: _buildSidebar(context), // Sidebar Drawer
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      key: _scaffoldKey,
+      drawer: _buildSidebar(context),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFEEE6FF),
+              Color(0xFFD2E3FF),
+            ], // Light purple to blue gradient
+          ),
+        ),
+        child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Hello\nShaun Murphy',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.45,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue.shade700, Colors.blue.shade400],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      _scaffoldKey.currentState?.openDrawer(); // Open sidebar
-                    },
-                    child: const CircleAvatar(
-                      radius: 20,
-                      backgroundImage: AssetImage('assets/anaDeArmas.jpg'),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                      offset: Offset(0, 5),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Search Bar
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search services',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 40,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Hello,\nShaun Murphy 👋',
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                          child: const CircleAvatar(
+                            radius: 35,
+                            backgroundImage: NetworkImage(
+                              'https://github.com/shadcn.png',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Search Bar
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: const TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search services...',
+                          prefixIcon: Icon(Icons.search, color: Colors.grey),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(vertical: 14),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              // Services
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  Icon(Icons.person, size: 40, color: Colors.green),
-                  Icon(Icons.edit, size: 40, color: Colors.orange),
-                  Icon(Icons.grid_view, size: 40, color: Colors.blue),
-                  Icon(Icons.coronavirus, size: 40, color: Colors.purple),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // To-Do List
-              const Text(
-                'ToDo-List',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 30),
+
+              // Services Section with Hover Animation
               Expanded(
-                child: ListView(
+                child: GridView.count(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
                   children: const [
-                    ToDoCard(
-                      day: '12',
-                      weekday: 'Tue',
-                      time: '09:30 AM',
-                      title: 'Class',
-                      subtitle: 'Science Computer',
-                      color: Colors.teal,
-                    ),
-                    ToDoCard(
-                      day: '13',
-                      weekday: 'Thur',
-                      time: '09:40 AM',
-                      title: 'Meeting',
-                      subtitle: 'Asd Professional',
+                    _ServiceIcon(
+                      icon: Icons.person,
+                      label: 'Profile',
                       color: Colors.green,
+                    ),
+                    _ServiceIcon(
+                      icon: Icons.edit,
+                      label: 'Edit',
+                      color: Colors.orange,
+                    ),
+                    _ServiceIcon(
+                      icon: Icons.grid_view,
+                      label: 'Dashboard',
+                      color: Colors.blue,
+                    ),
+                    _ServiceIcon(
+                      icon: Icons.favorite,
+                      label: 'Health',
+                      color: Colors.purple,
                     ),
                   ],
                 ),
@@ -98,129 +146,111 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Sidebar Drawer
   Widget _buildSidebar(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/anaDeArmas.jpg'),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Shaun Murphy',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                Text(
-                  'shaun@example.com',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-              ],
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue.shade800),
+            accountName: const Text(
+              'Shaun Murphy',
+              style: TextStyle(fontSize: 18),
+            ),
+            accountEmail: const Text(
+              'shaun@example.com',
+              style: TextStyle(fontSize: 14),
+            ),
+            currentAccountPicture: const CircleAvatar(
+              backgroundImage: AssetImage('assets/anaDeArmas.jpg'),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Login Settings'),
-            onTap: () {
-              // Navigate to Login Settings
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginSettingsPage()),
-              );
-            },
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginSettingsPage()),
+                ),
           ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Sign Out'),
-            onTap: () {
-              _showSignOutDialog(context);
-            },
+            onTap: () => _showSignOutDialog(context),
           ),
         ],
       ),
     );
   }
 
-  // Sign Out Confirmation Dialog
   void _showSignOutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Sign Out'),
-        content: const Text('Are you sure you want to sign out?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Sign Out'),
+            content: const Text('Are you sure you want to sign out?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+                child: const Text('Sign Out'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/login'); // Go back to Login Page
-            },
-            child: const Text('Sign Out'),
-          ),
-        ],
-      ),
     );
   }
 }
 
-// Placeholder for Login Settings Page
-class LoginSettingsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login Settings')),
-      body: const Center(child: Text('Login settings go here')),
-    );
-  }
-}
-
-// ToDo Card Widget
-class ToDoCard extends StatelessWidget {
-  final String day;
-  final String weekday;
-  final String time;
-  final String title;
-  final String subtitle;
+class _ServiceIcon extends StatelessWidget {
+  final IconData icon;
+  final String label;
   final Color color;
 
-  const ToDoCard({
-    super.key,
-    required this.day,
-    required this.weekday,
-    required this.time,
-    required this.title,
-    required this.subtitle,
+  const _ServiceIcon({
+    required this.icon,
+    required this.label,
     required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: color.withOpacity(0.2),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color,
-          child: Text(
-            day,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {}, // Add navigation or action here
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 3),
             ),
-          ),
+          ],
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('$weekday, $time\n$subtitle'),
-        isThreeLine: true,
+        padding: EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: color.withOpacity(0.2),
+              child: Icon(icon, color: color, size: 30),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -8,32 +8,104 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Email", style: TextStyle(fontSize: 16)),
-            TextField(controller: emailController),
-            SizedBox(height: 16),
-            Text("Password", style: TextStyle(fontSize: 16)),
-            TextField(controller: passwordController, obscureText: true),
-            SizedBox(height: 24),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Navigate to MainScreen on successful login
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen()),
-                  );
-                },
-                child: Text("Login"),
+      backgroundColor: Color(0xFFEBF5FF), // Light blue background
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.lock, size: 80, color: Colors.blue), // Lock Icon
+              SizedBox(height: 20),
+
+              Text(
+                "Welcome Back!",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue[800],
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 10),
+
+              Text(
+                "Login to continue",
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+              SizedBox(height: 30),
+
+              // Email Field
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  prefixIcon: Icon(Icons.email, color: Colors.blue),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+
+              // Password Field
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: "Password",
+                  prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
+              ),
+              SizedBox(height: 24),
+
+              // Login Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[700],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    "Login",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              // Signup Link
+              GestureDetector(
+                onTap: () {
+                  // Add signup navigation logic if needed
+                },
+                child: Text(
+                  "Don't have an account? Sign Up",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.blue[700],
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
