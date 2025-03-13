@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'ai_companion_page.dart'; // Import AI Companion Page
-import 'camera_mic_page.dart'; // Import Camera/Mic Page
+import 'package:spectrum_link/pages/ai_companion_page.dart'; // Import AI Companion Page
+import 'package:spectrum_link/pages/camera_mic_page.dart'; // Import Camera/Mic Page
 
 class AIPage extends StatelessWidget {
+  const AIPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
