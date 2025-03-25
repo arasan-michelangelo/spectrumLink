@@ -99,6 +99,7 @@ if __name__=="__main__":
 
 # Run the following command to start the server
 # python app.py
+#Hello World
 
 # Test the server using the following command
 # curl -X POST http://127.0.0.1:5000/process-aac ^
