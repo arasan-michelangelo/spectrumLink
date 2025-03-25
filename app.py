@@ -2,11 +2,19 @@ from google import genai
 from google.genai import types
 from flask import Flask, request, jsonify
 from google.cloud import firestore
-import uuid
+from dotenv import load_dotenv
+import os
 from datetime import datetime
 
-project_id = "kitahack-aac" # firestore project id
-db = firestore.Client(project=project_id)
+load_dotenv()
+
+FIRESTORE_PROJECT_NAME=os.getenv("FIRESTORE_PROJECT_NAME")
+LOCATION=os.getenv("LOCATION")
+MODEL_ID=os.getenv("VERTEX_MODEL_ID")
+PROJECT_ID=os.getenv("VERTEX_PROJECT_ID")
+
+project_id =FIRESTORE_PROJECT_NAME # firestore project id
+db = firestore.Client(project=project_id) #senstive
 
 app = Flask(__name__)
 @app.route('/process-aac', methods=['POST'])
@@ -29,32 +37,17 @@ def process_aac():
         result_string = f"{card_1} {card_2} {card_3} {card_4} {card_5}"
         print(f"Result string: {result_string}")
 
-        #input = [None] * 5
-
-        # Read the latest document from Firestore
-        # doc_ref = db.collection("AAC_input").order_by("timestamp", direction="DESCENDING").limit(1).get()
-
-        # if not doc_ref:
-        #     return jsonify({"error":"No data found"}),404
-
-        # for doc in doc_ref:
-        #     data = doc.to_dict()
-        #     input = [data.get(f'card_{i+1}', '') for i in range(5)]  # Use list comprehension
-
-        # result_string = ' '.join(input)  # Convert list to string
-        # print(f"Data from the list: {input}")
-
         #AI Processing
         def generate():
             global ai_generated_text  # Ensure modification of the global variable
 
             client = genai.Client(
                 vertexai=True,
-                project="901694537349",
-                location="us-central1",
+                project=PROJECT_ID, #senstive
+                location=LOCATION,#senstive
             )
 
-            model = "projects/901694537349/locations/us-central1/endpoints/2313905727980175360"
+            model = MODEL_ID 
             contents = [result_string]
 
             generate_content_config = types.GenerateContentConfig(
