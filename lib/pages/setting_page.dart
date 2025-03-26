@@ -1,72 +1,116 @@
 import 'package:flutter/material.dart';
 
-class LoginSettingsPage extends StatelessWidget {
-  const LoginSettingsPage({super.key});
+class SettingsPage extends StatefulWidget {
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool isDarkMode = false;
+  bool notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login Settings'),
-        backgroundColor: Colors.blue.shade800,
+        title: const Text("Settings"),
+        backgroundColor: Colors.blue.shade700,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFEEE6FF), Color(0xFFD2E3FF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(16.0),
           children: [
             const Text(
-              'Change Password',
+              "Preferences",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Current Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
+            _buildSwitchTile(
+              title: "Dark Mode",
+              value: isDarkMode,
+              onChanged: (value) {
+                setState(() {
+                  isDarkMode = value;
+                });
+              },
             ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'New Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
+            _buildSwitchTile(
+              title: "Enable Notifications",
+              value: notificationsEnabled,
+              onChanged: (value) {
+                setState(() {
+                  notificationsEnabled = value;
+                });
+              },
             ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Confirm New Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade800,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              child: const Center(
-                child: Text('Update Password', style: TextStyle(fontSize: 16, color: Colors.white)),
-              ),
-            ),
-            const SizedBox(height: 30),
+            const Divider(),
             const Text(
-              'Two-Factor Authentication',
+              "Account",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SwitchListTile(
-              title: const Text('Enable Two-Factor Authentication'),
-              value: true,
-              onChanged: (bool value) {},
+            const SizedBox(height: 10),
+            _buildListTile(
+              title: "Change Password",
+              icon: Icons.lock,
+              onTap: () {
+                // Handle password change
+              },
+            ),
+            _buildListTile(
+              title: "Privacy Settings",
+              icon: Icons.privacy_tip,
+              onTap: () {
+                // Handle privacy settings
+              },
+            ),
+            const Divider(),
+            const Text(
+              "Support",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            _buildListTile(
+              title: "Help & Support",
+              icon: Icons.help_outline,
+              onTap: () {
+                // Navigate to help page
+              },
+            ),
+            _buildListTile(
+              title: "About App",
+              icon: Icons.info_outline,
+              onTap: () {
+                // Show app details
+              },
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSwitchTile({required String title, required bool value, required Function(bool) onChanged}) {
+    return SwitchListTile(
+      title: Text(title),
+      value: value,
+      onChanged: onChanged,
+      activeColor: Colors.blue,
+    );
+  }
+
+  Widget _buildListTile({required String title, required IconData icon, required VoidCallback onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.blue.shade700),
+      title: Text(title),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: onTap,
     );
   }
 }

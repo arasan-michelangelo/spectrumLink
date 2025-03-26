@@ -59,9 +59,66 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/waving_hand.png
+    - assets/images/exit_to_app.webp
+    - assets/images/thumb_up.webp
+    - assets/images/apple.png
+    - assets/images/bananas.png
+    - assets/images/bedtime.webp
+    - assets/images/boy.png
+    - assets/images/bread.png
+    - assets/images/butter.png
+    - assets/images/cereals.png
+    - assets/images/check.webp
+    - assets/images/chicken-leg.png
+    - assets/images/close.webp
+    - assets/images/coconut.png
+    - assets/images/durian.png
+    - assets/images/egg.png
+    - assets/images/error.webp
+    - assets/images/exit_to_app.webp
+    - assets/images/family.png
+    - assets/images/fire.webp
+    - assets/images/fish.png
+    - assets/images/front_hand.png
+    - assets/images/grape.png
+    - assets/images/hearing_disabled.png
+    - assets/images/help.webp
+    - assets/images/ice-cream.png
+    - assets/images/lemon.png
+    - assets/images/local_drink.webp
+    - assets/images/local_hospital.webp
+    - assets/images/location_on.webp
+    - assets/images/mango.png
+    - assets/images/map.png
+    - assets/images/milk.png
+    - assets/images/orange.png
+    - assets/images/papaya.png
+    - assets/images/pineapple.png
+    - assets/images/question_mark.webp
+    - assets/images/ramen.png
+    - assets/images/repeat.webp
+    - assets/images/restaurant.webp
+    - assets/images/rice.png
+    - assets/images/round.png
+    - assets/images/school.png
+    - assets/images/sentiment_dissatisfied.webp
+    - assets/images/serving-dish.png
+    - assets/images/smile.png
+    - assets/images/soda.png
+    - assets/images/spaguetti.png
+    - assets/images/stop.webp
+    - assets/images/strawberry-cake.png
+    - assets/images/strawberry.png
+    - assets/images/thumb_up.webp
+    - assets/images/vegetable.png
+    - assets/images/voice_over_off.png
+    - assets/images/warning.webp
+    - assets/images/watermelon.png
+    - assets/images/wave.png
+    - assets/images/wc.webp
+    - assets/images/write_it.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
