@@ -3,8 +3,17 @@ import 'login_page.dart';
 import 'pages/home_page.dart';
 import 'pages/ai_page.dart';
 import 'pages/updates_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firestore/firestore.dart';
+import 'firestore/firebase_options.dart';
 
-void main() {
+
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
+  
   runApp(MyApp());
 }
 
