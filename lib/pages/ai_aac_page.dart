@@ -1,19 +1,46 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:spectrum_link/firestore/firestore.dart';
+
+String aiResponse = "";
+
+Future<void> sendDataToBackend(List<String> selectedPhrases, Function(String) updateChat) async {
+  final String url = "http://10.0.2.2:5000/process-aac"; // Local Testing
+
+  if (selectedPhrases.isEmpty) return;
+
+  Map<String, dynamic> requestData = {
+    for (int i = 0; i < selectedPhrases.length; i++) "card_${i + 1}": selectedPhrases[i]
+  };
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestData),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      aiResponse = data["ai_generated_text"];
+      if (aiResponse.isNotEmpty) updateChat(aiResponse);
+    } else {
+      print("Error.statusCode: ${response.statusCode} - ${response.body}");
+    }
+  } catch (e) {
+    print("Request failed: $e");
+  }
+}
 
 class AIAccTab extends StatefulWidget {
   const AIAccTab({super.key});
 
-  @override
-  _AIAccTabState createState() => _AIAccTabState();
-}
-
-class _AIAccTabState extends State<AIAccTab>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
   static const List<Map<String, dynamic>> _aacPhrases = [
-    {
-      "category": "👋",
+{
+      "category": "👋 Greetings",
       "items": [
         {"text": "Hello", "icon": "assets/images/waving_hand.png"},
         {"text": "Goodbye", "icon": "assets/images/exit_to_app.webp"},
@@ -21,14 +48,14 @@ class _AIAccTabState extends State<AIAccTab>
       ],
     },
     {
-      "category": "🍎🥤",
+      "category": "🍎 Food & Drinks",
       "items": [
         {"text": "Apple", "icon": "assets/images/apple.png"},
         {"text": "Bananas", "icon": "assets/images/bananas.png"},
         {"text": "Bread", "icon": "assets/images/bread.png"},
         {"text": "Butter", "icon": "assets/images/butter.png"},
         {"text": "Cereals", "icon": "assets/images/cereals.png"},
-        {"text": "Chicken Leg", "icon": "assets/images/chicken-leg.png"},
+        {"text": "Chicken ", "icon": "assets/images/chicken-leg.png"},
         {"text": "Coconut", "icon": "assets/images/coconut.png"},
         {"text": "Durian", "icon": "assets/images/durian.png"},
         {"text": "Egg", "icon": "assets/images/egg.png"},
@@ -46,7 +73,7 @@ class _AIAccTabState extends State<AIAccTab>
         {"text": "Soda", "icon": "assets/images/soda.png"},
         {"text": "Spaghetti", "icon": "assets/images/spaguetti.png"},
         {
-          "text": "Strawberry Cake",
+          "text": "Cake",
           "icon": "assets/images/strawberry-cake.png",
         },
         {"text": "Strawberry", "icon": "assets/images/strawberry.png"},
@@ -55,7 +82,7 @@ class _AIAccTabState extends State<AIAccTab>
       ],
     },
     {
-      "category": "🏃‍♂️👏",
+      "category": "🏃‍♂️ Action",
       "items": [
         {"text": "Check", "icon": "assets/images/check.webp"},
         {"text": "Close", "icon": "assets/images/close.webp"},
@@ -69,14 +96,14 @@ class _AIAccTabState extends State<AIAccTab>
       ],
     },
     {
-      "category": "😊😢",
+      "category": "😊 Feelings",
       "items": [
         {"text": "Sad", "icon": "assets/images/sentiment_dissatisfied.webp"},
         {"text": "Smile", "icon": "assets/images/smile.png"},
       ],
     },
     {
-      "category": "🏠👨‍👩‍👦",
+      "category": "🏠 Places",
       "items": [
         {"text": "Boy", "icon": "assets/images/boy.png"},
         {"text": "Family", "icon": "assets/images/family.png"},
@@ -87,7 +114,7 @@ class _AIAccTabState extends State<AIAccTab>
       ],
     },
     {
-      "category": "⚠️🚫",
+      "category": "⚠️ Emergency",
       "items": [
         {"text": "Error", "icon": "assets/images/error.webp"},
         {"text": "Fire", "icon": "assets/images/fire.webp"},
@@ -97,199 +124,208 @@ class _AIAccTabState extends State<AIAccTab>
       ],
     },
   ];
-  late Map<String, List<Map<String, String>>> _categories;
+
+  @override
+  State<AIAccTab> createState() => _AIAccTabState();
+}
+
+class _AIAccTabState extends State<AIAccTab> {
   List<String> selectedPhrases = [];
+  List<Map<String, dynamic>> _chatHistory = [];
+  bool isMaxReached = false;
+  late Map<String, List<Map<String, String>>> _categories;
   TextEditingController _textController = TextEditingController();
-  String _selectedCategory = _aacPhrases.first['category'];
+  TextEditingController _manualChatController = TextEditingController();
+  String _selectedCategory = AIAccTab._aacPhrases.first['category'];
 
   @override
   void initState() {
     super.initState();
-
-    // Extracting categories from _aacPhrases
     _categories = {
-      for (var category in _aacPhrases)
+      for (var category in AIAccTab._aacPhrases)
         category['category']: List<Map<String, String>>.from(category['items']),
     };
-
-    _tabController = TabController(length: _categories.length, vsync: this);
   }
 
-  void _onPhraseTap(String phrase) {
+  void addPhrase(String phrase) {
+    if (selectedPhrases.length < 5) {
+      setState(() {
+        selectedPhrases.add(phrase);
+        _textController.text = selectedPhrases.join(" ");
+        isMaxReached = selectedPhrases.length == 5;
+      });
+    }
+  }
+
+  void sendToFirestore() async {
+    if (selectedPhrases.isEmpty) return;
+
+    Timestamp currentTimestamp = Timestamp.now();
+    await FirestoreService().createInputCard(selectedPhrases, currentTimestamp);
+
     setState(() {
-      selectedPhrases.add(phrase);
-      _textController.text = selectedPhrases.join(" ");
+      _chatHistory.add({"sender": "User", "messages": List.from(selectedPhrases)});
+      sendDataToBackend(selectedPhrases, updateChatHistory);
+      selectedPhrases.clear();
+      isMaxReached = false;
     });
   }
 
-  Future<void> _generateSentence() async {
-    if (selectedPhrases.isEmpty) return;
+  void sendManualChat() {
+    String userMessage = _manualChatController.text.trim();
+    if (userMessage.isEmpty) return;
 
-    String generatedSentence =
-        "Excuse me! I need help. Someone fainted on the road!";
     setState(() {
-      _textController.text += " " + generatedSentence;
+      _chatHistory.add({"sender": "User", "messages": [userMessage]});
+      _manualChatController.clear();
+    });
+
+    sendDataToBackend([userMessage], updateChatHistory);
+  }
+
+  void updateChatHistory(String response) {
+    setState(() {
+      _chatHistory.add({"sender": "AI", "messages": [response]});
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Row(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      hintText: "Selected words appear here...",
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: _generateSentence,
-                      ),
+    return Column( //Chat Box
+      children: [
+        Container(
+          height: 250,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: ListView(
+            children: _chatHistory.map((chat) {
+              bool isUser = chat["sender"] == "User";
+              return Column(
+                crossAxisAlignment:
+                    isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isUser ? "You" : "AI Assistant",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isUser ? Colors.blue : Colors.green,
                     ),
-                    readOnly: true,
                   ),
-                ),
-                Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 6,
-                    ),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width > 400 ? 4 : 3,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 1.0,
-                    ),
-                    itemCount: _categories[_selectedCategory]?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      var phrases = _categories[_selectedCategory]!;
-                      return InkWell(
-                        onTap: () => _onPhraseTap(phrases[index]['text']!),
-                        borderRadius: BorderRadius.circular(12),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                phrases[index]['icon']!,
-                                width: 40,
-                                height: 40,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
-                                    Icons.error,
-                                    size: 50,
-                                    color: Colors.red,
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                phrases[index]['text']!,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
+                  Column(
+                    children: chat["messages"].map<Widget>((msg) {
+                      return Container(
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        decoration: BoxDecoration(
+                          color: isUser ? Colors.blue : Colors.green,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          msg,
+                          style: const TextStyle(color: Colors.white),
                         ),
                       );
-                    },
+                    }).toList(),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }).toList(),
           ),
-          // Right-side Category List
-          Container(
-            width: 90, // Adjust width as needed
-            color: Colors.transparent, // Transparent background
-            child: ListView.builder(
-              itemCount: _categories.keys.length,
-              itemBuilder: (context, index) {
-                String category = _categories.keys.elementAt(index);
-                bool isSelected = _selectedCategory == category;
+        ),
 
-                return Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: 4,
-                  ), // Space between items
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? Colors.blue.shade50
-                            : Colors.transparent, // Highlight selected
-                    borderRadius: BorderRadius.circular(12), // Curved border
-                    border:
-                        isSelected
-                            ? Border.all(
-                              color: Colors.blue,
-                              width: 2,
-                            ) // White border on active
-                            : null,
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      category,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color:
-                            isSelected
-                                ? Colors.white
-                                : Colors
-                                    .grey[300], // White on active, grey on inactive
-                        fontWeight: FontWeight.w600,
-                        fontSize:20,
-                        
-                      ),
-                    ),
-                    trailing:
-                        isSelected
-                            ? Container(
-                              width: 5, // Thin vertical line
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            )
-                            : null,
-                    onTap: () {
-                      setState(() {
-                        _selectedCategory = category;
-                      });
-                    },
-                  ),
-                );
-              },
-            ),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  children: selectedPhrases.map((phrase) {
+                    return Chip(
+                      label: Text(phrase),
+                      deleteIcon: Icon(Icons.close, size: 18, color: Colors.red),
+                      onDeleted: () {
+                        setState(() {
+                          selectedPhrases.remove(phrase);
+                          isMaxReached = false;
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: sendToFirestore,
+                icon: const Icon(Icons.send),
+                label: const Text("Send"),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+
+        Expanded(
+          child: Row( //Grid Icon Box
+            children: [
+              Expanded(
+                flex: 3,
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.6,
+                  ),
+                  itemCount: _categories[_selectedCategory]?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    var phrase = _categories[_selectedCategory]![index];
+                    return InkWell(
+                      onTap: () {
+                        if (!isMaxReached) addPhrase(phrase['text']!);
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(phrase['icon']!, width: 50, height: 50),
+                          Text(phrase['text']!, textAlign: TextAlign.center),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              // Right-side Category List
+              Container(
+                width: 125,
+                child: ListView.builder(
+                  itemCount: _categories.keys.length,
+                  itemBuilder: (context, index) {
+                    String category = _categories.keys.elementAt(index);
+                    List<String> words = category.split(" "); // Split category into words
+
+                    return ListTile(
+                      title: Column(
+                        mainAxisSize: MainAxisSize.min, // Prevent unnecessary space
+                        children: words.map((word) => Text(word, textAlign: TextAlign.center)).toList(),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _selectedCategory = category;
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
