@@ -75,3 +75,7 @@ node_modules/
 _pycache_/
 
 tempCodeRunnerFile.py
+
+#Service key
+firebaseServiceAccountKey.json
+gcpServiceKey.json
