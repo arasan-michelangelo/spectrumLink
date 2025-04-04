@@ -5,13 +5,19 @@ from google.cloud import firestore
 from dotenv import load_dotenv
 import os
 from datetime import datetime
+import traceback
+import firebase_admin 
+from firebase_admin import credentials
 
 load_dotenv()
+cred = credentials.Certificate("firebaseServiceAccountKey.json")
+firebase_admin.initialize_app(cred)
 
 FIRESTORE_PROJECT_NAME=os.getenv("FIRESTORE_PROJECT_NAME")
 LOCATION=os.getenv("LOCATION")
 MODEL_ID=os.getenv("VERTEX_MODEL_ID")
 PROJECT_ID=os.getenv("VERTEX_PROJECT_ID")
+
 
 project_id =FIRESTORE_PROJECT_NAME # firestore project id
 db = firestore.Client(project=project_id) #senstive
@@ -92,10 +98,16 @@ def process_aac():
             }),200
       
       except Exception as e:
-          return jsonify({"error":str(e)}),500
+           print(f"Error: {str(e)}")
+           error_details = traceback.format_exc()
+           return jsonify({"error": str(e), "details": error_details}), 500
 
 if __name__=="__main__":
-    app.run(debug=True)
+    # Get the port from the PORT environment variable, default to 8080 for Cloud Run
+    port = int(os.getenv("PORT", 8080))
+    # Run the app on 0.0.0.0 to listen on all interfaces, using the specified port
+    app.run(host="0.0.0.0", port=port, debug=False)  # Disable debug for production
+
 
 # Run the following command to start the server
 # python app.py
