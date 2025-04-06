@@ -4,7 +4,6 @@ import 'pages/home_page.dart';
 import 'pages/ai_page.dart';
 import 'pages/updates_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firestore/firestore.dart';
 import 'firestore/firebase_options.dart';
 
 

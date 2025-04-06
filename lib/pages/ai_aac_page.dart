@@ -8,7 +8,7 @@ import 'package:spectrum_link/firestore/firestore.dart';
 String aiResponse = "";
 
 Future<void> sendDataToBackend(List<String> selectedPhrases, Function(String) updateChat) async {
-  final String url = "http://10.0.2.2:5000/process-aac"; // Local Testing
+  final String url = "https://aac-app-tzx2gr5owq-uc.a.run.app/process-aac"; // Local Testing
 
   if (selectedPhrases.isEmpty) return;
 
@@ -131,11 +131,11 @@ class AIAccTab extends StatefulWidget {
 
 class _AIAccTabState extends State<AIAccTab> {
   List<String> selectedPhrases = [];
-  List<Map<String, dynamic>> _chatHistory = [];
+  final List<Map<String, dynamic>> _chatHistory = [];
   bool isMaxReached = false;
   late Map<String, List<Map<String, String>>> _categories;
-  TextEditingController _textController = TextEditingController();
-  TextEditingController _manualChatController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
+  final TextEditingController _manualChatController = TextEditingController();
   String _selectedCategory = AIAccTab._aacPhrases.first['category'];
 
   @override
@@ -299,7 +299,7 @@ class _AIAccTabState extends State<AIAccTab> {
               ),
 
               // Right-side Category List
-              Container(
+              SizedBox(
                 width: 125,
                 child: ListView.builder(
                   itemCount: _categories.keys.length,

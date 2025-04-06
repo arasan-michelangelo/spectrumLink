@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
   final Map<String, dynamic> scenario;
+  final Future<String> Function(String)? getAIResponse;
+  final String? initialMessage;
   
-  const ChatPage({super.key, required this.scenario});
+  const ChatPage({
+    super.key, 
+    required this.scenario,
+    this.getAIResponse,
+    this.initialMessage,
+  });
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -12,13 +19,39 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, String>> _messages = [];
+  bool _isLoading = false;
 
-  void _sendMessage() {
-    if (_messageController.text.trim().isNotEmpty) {
-      setState(() {
-        _messages.add({"user": _messageController.text.trim()});
-      });
-      _messageController.clear();
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialMessage != null) {
+      _messages.add({"bot": widget.initialMessage!});
+    }
+  }
+
+  Future<void> _sendMessage() async {
+    if (_messageController.text.trim().isEmpty) return;
+
+    final userMessage = _messageController.text.trim();
+    setState(() {
+      _messages.add({"user": userMessage});
+      _isLoading = true;
+    });
+    _messageController.clear();
+
+    if (widget.getAIResponse != null) {
+      try {
+        final botResponse = await widget.getAIResponse!(userMessage);
+        setState(() {
+          _messages.add({"bot": botResponse});
+          _isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          _messages.add({"bot": "I'm sorry, I encountered an error. Please try again."});
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -43,9 +76,20 @@ class _ChatPageState extends State<ChatPage> {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(16.0),
-                itemCount: _messages.length,
+                itemCount: _messages.length + (_isLoading ? 1 : 0),
                 itemBuilder: (context, index) {
-                  bool isUser = _messages[index].containsKey("user");
+                  if (index == _messages.length && _isLoading) {
+                    return const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+
+                  final message = _messages[index];
+                  bool isUser = message.containsKey("user");
                   return Align(
                     alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                     child: Container(
@@ -56,7 +100,7 @@ class _ChatPageState extends State<ChatPage> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: Text(
-                        isUser ? _messages[index]["user"]! : _messages[index]["bot"]!,
+                        isUser ? message["user"]! : message["bot"]!,
                         style: TextStyle(
                           color: isUser ? Colors.white : Colors.black,
                         ),
@@ -73,8 +117,9 @@ class _ChatPageState extends State<ChatPage> {
                   Expanded(
                     child: TextField(
                       controller: _messageController,
+                      enabled: !_isLoading,
                       decoration: InputDecoration(
-                        hintText: "Type a message...",
+                        hintText: _isLoading ? "Waiting for response..." : "Type a message...",
                         fillColor: Colors.white,
                         filled: true,
                         border: OutlineInputBorder(
@@ -86,8 +131,8 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   const SizedBox(width: 10),
                   FloatingActionButton(
-                    onPressed: _sendMessage,
-                    backgroundColor: Colors.blueAccent,
+                    onPressed: _isLoading ? null : _sendMessage,
+                    backgroundColor: _isLoading ? Colors.grey : Colors.blueAccent,
                     child: const Icon(Icons.send, color: Colors.white),
                   ),
                 ],
