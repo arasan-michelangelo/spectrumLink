@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import '/pages/profile_page.dart';
 import '/pages/edit_page.dart';
 import '/pages/setting_page.dart';
+import 'package:spectrum_link/pages/ai_companion_page.dart';
+import 'package:spectrum_link/pages/emoreader_page.dart';
+import 'package:spectrum_link/pages/emotion_classifier.dart';
+import 'package:spectrum_link/pages/updates_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,7 +35,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Header Section
               Container(
-                height: MediaQuery.of(context).size.height * 0.45,
+                height: MediaQuery.of(context).size.height * 0.35,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.blue.shade700, Colors.blue.shade400],
@@ -59,14 +63,6 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Hello,\nShaun Murphy 👋',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
                         GestureDetector(
                           onTap: () => _scaffoldKey.currentState?.openDrawer(),
                           child: CircleAvatar(
@@ -75,6 +71,35 @@ class _HomePageState extends State<HomePage> {
                               'https://github.com/shadcn.png',
                             ),
                           ),
+                        ),
+                        Text(
+                          'Hello,\nShaun Murphy 👋',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Stack(
+                          clipBehavior:
+                              Clip.none, // Allows the notification dot to go outside the icon
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.notifications,
+                                color: Colors.white70,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdatesPage(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -113,46 +138,44 @@ class _HomePageState extends State<HomePage> {
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   children: [
-                    // Add more service cards here
+                    // AI Companion Card
+                    _buildFeatureCard(
+                      context,
+                      title: "AI Companion",
+                      icon: Icons.smart_toy,
+                      color: Colors.blueAccent,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AICompanionPage(),
+                            ),
+                          ),
+                    ),
+
+                    // Camera/Mic Section
+                    _buildFeatureCard(
+                      context,
+                      title: "EmoReader",
+                      icon: Icons.camera_alt,
+                      color: Colors.green,
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                final classifier = EmotionClassifier();
+                                classifier.loadModel(); // Load the model first
+                                return EmoreaderPage(classifier: classifier);
+                              },
+                            ),
+                          ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceCard(BuildContext context, String title, IconData icon,
-      Color color, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 40, color: color),
-            SizedBox(height: 10),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -231,6 +254,52 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+    );
+  }
+
+  Widget _buildFeatureCard(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.85),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              backgroundColor: color.withOpacity(0.1),
+              radius: 30,
+              child: Icon(icon, size: 32, color: color),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

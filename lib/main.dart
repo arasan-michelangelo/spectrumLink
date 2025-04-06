@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spectrum_link/pages/profile_page.dart';
 import 'login_page.dart';
 import 'pages/home_page.dart';
 import 'pages/ai_page.dart';
 import 'pages/updates_page.dart';
+import 'pages/setting_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firestore/firebase_options.dart';
 
@@ -43,12 +45,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final List<Widget> _pages = [
+    SettingsPage(),
     HomePage(),
-    AIPage(),
-    UpdatesPage(),
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -60,6 +62,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.blue[700], // Main screen background
       body: _pages[_selectedIndex],
 
@@ -67,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        color: Color(0xFFD2E3FF), // Matches background
+        color: Colors.white54, // Matches background
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0), // Horizontal padding added
           child: Row(
@@ -76,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 10.0), // Extra left padding
                 child: IconButton(
-                  icon: Icon(Icons.home, size: 30, color: _selectedIndex == 0 ? Colors.blue : Colors.black54),
+                  icon: Icon(Icons.settings, size: 30, color: _selectedIndex == 0 ? Colors.blue : Colors.black54),
                   onPressed: () => _onItemTapped(0),
                 ),
               ),
@@ -84,13 +87,14 @@ class _MainScreenState extends State<MainScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 10.0), // Extra right padding
                 child: IconButton(
-                  icon: Icon(Icons.update, size: 30, color: _selectedIndex == 2 ? Colors.blue : Colors.black54),
+                  icon: Icon(Icons.supervised_user_circle, size: 30, color: _selectedIndex == 2 ? Colors.blue : Colors.black54),
                   onPressed: () => _onItemTapped(2),
                 ),
               ),
             ],
           ),
         ),
+        
       ),
 
       // **Circular Floating Action Button for AI Page**
@@ -101,15 +105,24 @@ class _MainScreenState extends State<MainScreen> {
           shape: BoxShape.circle,
           color: Colors.blueAccent,
           boxShadow: [
-            BoxShadow(color: Colors.black26, blurRadius: 10, spreadRadius: 2),
-          ],
+BoxShadow(
+        color: Colors.black26, // Shadow color
+        blurRadius: 10, // Blurring the shadow
+        spreadRadius: 2, // How much the shadow spreads
+        offset: Offset(0, 4), // Position the shadow below the FAB
+      ),          ],
         ),
         child: FloatingActionButton(
-          backgroundColor: Colors.transparent, // Ensures color consistency
-          elevation: 0,
-          child: Icon(Icons.android, size: 35, color: Colors.white), // **Larger AI icon**
-          onPressed: () => _onItemTapped(1),
-        ),
+  backgroundColor: Colors.transparent, // Ensures color consistency
+  elevation: 0,
+  onPressed: () => _onItemTapped(1),
+  child: Image.asset(
+    'assets/images/SpectrumLink_Logo.png',
+    width: 45,
+    height: 45,
+  ),
+),
+
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

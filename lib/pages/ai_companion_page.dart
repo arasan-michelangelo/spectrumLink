@@ -38,14 +38,14 @@ class _AICompanionPageState extends State<AICompanionPage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                        horizontal: 15,
+                        vertical: 7,
                       ),
                       child: Row(
                         children: [
-                          _buildTabButton("Training", 0),
+                          _buildTabButton("Training 📚", 0),
                           const SizedBox(width: 8),
-                          _buildTabButton("AAC", 1),
+                          _buildTabButton("AAC 🧠", 1),
                         ],
                       ),
                     ),

@@ -7,13 +7,18 @@ import 'package:spectrum_link/firestore/firestore.dart';
 
 String aiResponse = "";
 
-Future<void> sendDataToBackend(List<String> selectedPhrases, Function(String) updateChat) async {
-  final String url = "https://aac-app-tzx2gr5owq-uc.a.run.app/process-aac"; // Local Testing
+Future<void> sendDataToBackend(
+  List<String> selectedPhrases,
+  Function(String) updateChat,
+) async {
+  final String url =
+      "https://aac-app-tzx2gr5owq-uc.a.run.app/process-aac"; // Local Testing
 
   if (selectedPhrases.isEmpty) return;
 
   Map<String, dynamic> requestData = {
-    for (int i = 0; i < selectedPhrases.length; i++) "card_${i + 1}": selectedPhrases[i]
+    for (int i = 0; i < selectedPhrases.length; i++)
+      "card_${i + 1}": selectedPhrases[i],
   };
 
   try {
@@ -39,16 +44,18 @@ class AIAccTab extends StatefulWidget {
   const AIAccTab({super.key});
 
   static const List<Map<String, dynamic>> _aacPhrases = [
-{
-      "category": "👋 Greetings",
-      "items": [
-        {"text": "Hello", "icon": "assets/images/waving_hand.png"},
-        {"text": "Goodbye", "icon": "assets/images/exit_to_app.webp"},
-        {"text": "Thank you", "icon": "assets/images/thumb_up.webp"},
-      ],
-    },
     {
-      "category": "🍎 Food & Drinks",
+  "category": "👋",
+  "items": [
+    { "text": "Hello", "icon": "assets/images/1f44b.png" },             
+    { "text": "Raised Back Hand", "icon": "assets/images/1f91a.png" },  
+    { "text": "Hi Everyone", "icon": "assets/images/1f590-fe0f.png" },      
+    { "text": "Goodbye", "icon": "assets/images/270b.png" },           
+    { "text": "Thank You", "icon": "assets/images/1f64b.png" },        
+  ]
+},
+    {
+      "category": "🍽️",
       "items": [
         {"text": "Apple", "icon": "assets/images/apple.png"},
         {"text": "Bananas", "icon": "assets/images/bananas.png"},
@@ -72,17 +79,14 @@ class AIAccTab extends StatefulWidget {
         {"text": "Rice", "icon": "assets/images/rice.png"},
         {"text": "Soda", "icon": "assets/images/soda.png"},
         {"text": "Spaghetti", "icon": "assets/images/spaguetti.png"},
-        {
-          "text": "Cake",
-          "icon": "assets/images/strawberry-cake.png",
-        },
+        {"text": "Cake", "icon": "assets/images/strawberry-cake.png"},
         {"text": "Strawberry", "icon": "assets/images/strawberry.png"},
         {"text": "Vegetable", "icon": "assets/images/vegetable.png"},
         {"text": "Watermelon", "icon": "assets/images/watermelon.png"},
       ],
     },
     {
-      "category": "🏃‍♂️ Action",
+      "category": "🏃‍♂️",
       "items": [
         {"text": "Check", "icon": "assets/images/check.webp"},
         {"text": "Close", "icon": "assets/images/close.webp"},
@@ -90,20 +94,30 @@ class AIAccTab extends StatefulWidget {
         {"text": "Location On", "icon": "assets/images/location_on.webp"},
         {"text": "Map", "icon": "assets/images/map.png"},
         {"text": "Repeat", "icon": "assets/images/repeat.webp"},
-        {"text": "Stop", "icon": "assets/images/stop.webp"},
-        {"text": "Wave", "icon": "assets/images/wave.png"},
+        {"text": "Stop", "icon": "assets/images/1f91a.png"},
+        {"text": "Wave", "icon": "assets/images/1f44b.png"},
         {"text": "Write It", "icon": "assets/images/write_it.webp"},
       ],
     },
     {
-      "category": "😊 Feelings",
+      "category": "😊",
       "items": [
-        {"text": "Sad", "icon": "assets/images/sentiment_dissatisfied.webp"},
-        {"text": "Smile", "icon": "assets/images/smile.png"},
+        {"text": "Smile", "icon": "assets/images/1f60a.png"},
+        {"text": "Proud", "icon": "assets/images/1f60e.png"},
+        {"text": "Love", "icon": "assets/images/1f60d.png"},
+        {"text": "Playful", "icon": "assets/images/1f61b.png"},
+        {"text": "Joking", "icon": "assets/images/1f61c.png"},
+        {"text": "Flirting", "icon": "assets/images/1f60f.png"},
+        {"text": "Shock", "icon": "assets/images/1f62f.png"},
+        {"text": "Grimacing", "icon": "assets/images/1f62c.png"},
+        {"text": "Cry", "icon": "assets/images/1f62d.png"},
+        {"text": "Sad", "icon": "assets/images/1f61e.png"},
+        {"text": "Thinking", "icon": "assets/images/1f9d0.png"},
+        // {"text": "Thank You", "icon": "assets/images/1f923.png"},
       ],
     },
     {
-      "category": "🏠 Places",
+      "category": "🌍",
       "items": [
         {"text": "Boy", "icon": "assets/images/boy.png"},
         {"text": "Family", "icon": "assets/images/family.png"},
@@ -114,13 +128,13 @@ class AIAccTab extends StatefulWidget {
       ],
     },
     {
-      "category": "⚠️ Emergency",
+      "category": "⚠️",
       "items": [
-        {"text": "Error", "icon": "assets/images/error.webp"},
+        {"text": "Error", "icon": "assets/images/203c-fe0f.png"},
         {"text": "Fire", "icon": "assets/images/fire.webp"},
-        {"text": "Question Mark", "icon": "assets/images/question_mark.webp"},
+        {"text": "Question Mark", "icon": "assets/images/2753.png"},
         {"text": "Voice Over Off", "icon": "assets/images/voice_over_off.png"},
-        {"text": "Warning", "icon": "assets/images/warning.webp"},
+        {"text": "Warning", "icon": "assets/images/26a0-fe0f.png"},
       ],
     },
   ];
@@ -164,7 +178,10 @@ class _AIAccTabState extends State<AIAccTab> {
     await FirestoreService().createInputCard(selectedPhrases, currentTimestamp);
 
     setState(() {
-      _chatHistory.add({"sender": "User", "messages": List.from(selectedPhrases)});
+      _chatHistory.add({
+        "sender": "User",
+        "messages": List.from(selectedPhrases),
+      });
       sendDataToBackend(selectedPhrases, updateChatHistory);
       selectedPhrases.clear();
       isMaxReached = false;
@@ -176,7 +193,10 @@ class _AIAccTabState extends State<AIAccTab> {
     if (userMessage.isEmpty) return;
 
     setState(() {
-      _chatHistory.add({"sender": "User", "messages": [userMessage]});
+      _chatHistory.add({
+        "sender": "User",
+        "messages": [userMessage],
+      });
       _manualChatController.clear();
     });
 
@@ -185,76 +205,126 @@ class _AIAccTabState extends State<AIAccTab> {
 
   void updateChatHistory(String response) {
     setState(() {
-      _chatHistory.add({"sender": "AI", "messages": [response]});
+      _chatHistory.add({
+        "sender": "AI",
+        "messages": [response],
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column( //Chat Box
+    return Column(
+      //Chat Box
       children: [
         Container(
-          height: 250,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(10),
+  height: 250,
+  padding: const EdgeInsets.all(10),
+  decoration: BoxDecoration(
+    color: Colors.grey.shade100,
+    borderRadius: BorderRadius.circular(10),
+  ),
+  child: _chatHistory.isEmpty
+      ? Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.touch_app,
+                size: 50,
+                color: Colors.blue.shade700,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'It looks like you haven’t made ',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade700,
+                ),
+              ),
+              Text(
+                'a selection yet!',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade700,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Tap on an option to get started.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
           ),
-          child: ListView(
-            children: _chatHistory.map((chat) {
-              bool isUser = chat["sender"] == "User";
-              return Column(
-                crossAxisAlignment:
-                    isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    isUser ? "You" : "AI Assistant",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: isUser ? Colors.blue : Colors.green,
-                    ),
+        )
+      : ListView(
+          children: _chatHistory.map((chat) {
+            bool isUser = chat["sender"] == "User";
+            return Column(
+              crossAxisAlignment: isUser
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isUser ? "You" : "AI Assistant",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isUser ? Colors.blue : Colors.green,
                   ),
-                  Column(
-                    children: chat["messages"].map<Widget>((msg) {
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        decoration: BoxDecoration(
-                          color: isUser ? Colors.blue : Colors.green,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          msg,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
+                ),
+                Column(
+                  children: chat["messages"].map<Widget>((msg) {
+                    return Container(
+                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isUser ? Colors.blue : Colors.green,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        msg,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            );
+          }).toList(),
         ),
+),
+
 
         Padding(
           padding: const EdgeInsets.all(12.0),
+
           child: Row(
             children: [
               Expanded(
                 child: Wrap(
                   spacing: 8,
-                  children: selectedPhrases.map((phrase) {
-                    return Chip(
-                      label: Text(phrase),
-                      deleteIcon: Icon(Icons.close, size: 18, color: Colors.red),
-                      onDeleted: () {
-                        setState(() {
-                          selectedPhrases.remove(phrase);
-                          isMaxReached = false;
-                        });
-                      },
-                    );
-                  }).toList(),
+                  children:
+                      selectedPhrases.map((phrase) {
+                        return Chip(
+                          label: Text(phrase),
+                          deleteIcon: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: Colors.red,
+                          ),
+                          onDeleted: () {
+                            setState(() {
+                              selectedPhrases.remove(phrase);
+                              isMaxReached = false;
+                            });
+                          },
+                        );
+                      }).toList(),
                 ),
               ),
               ElevatedButton.icon(
@@ -267,7 +337,7 @@ class _AIAccTabState extends State<AIAccTab> {
         ),
 
         Expanded(
-          child: Row( //Grid Icon Box
+          child: Row(
             children: [
               Expanded(
                 flex: 3,
@@ -289,8 +359,34 @@ class _AIAccTabState extends State<AIAccTab> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(phrase['icon']!, width: 50, height: 50),
-                          Text(phrase['text']!, textAlign: TextAlign.center),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color:
+                                  Colors.lightBlue.shade100, // Background color
+                              borderRadius: BorderRadius.circular(
+                                12,
+                              ), // Rounded corners
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2), // Soft shadow
+                                ),
+                              ],
+                            ),
+                            child: Image.asset(
+                              phrase['icon']!,
+                              width: 50,
+                              height: 50,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            phrase['text']!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ],
                       ),
                     );
@@ -300,28 +396,90 @@ class _AIAccTabState extends State<AIAccTab> {
 
               // Right-side Category List
               SizedBox(
-                width: 125,
+                width: 80,
                 child: ListView.builder(
                   itemCount: _categories.keys.length,
                   itemBuilder: (context, index) {
                     String category = _categories.keys.elementAt(index);
-                    List<String> words = category.split(" "); // Split category into words
+                    List<String> words = category.split(
+                      " ",
+                    ); // Split category into words
 
-                    return ListTile(
-                      title: Column(
-                        mainAxisSize: MainAxisSize.min, // Prevent unnecessary space
-                        children: words.map((word) => Text(word, textAlign: TextAlign.center)).toList(),
+                    bool isSelected =
+                        _selectedCategory ==
+                        category; // Check if the category is selected
+
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 5,
+                      ), // Margin for better spacing
+                      decoration: BoxDecoration(
+                        border:
+                            isSelected
+                                ? Border.all(
+                                  color: Colors.blueAccent,
+                                  width: 2,
+                                ) // Blue border when selected
+                                : null,
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ), // Rounded corners for the border
                       ),
-                      onTap: () {
-                        setState(() {
-                          _selectedCategory = category;
-                        });
-                      },
+                      child: ListTile(
+                        tileColor:
+                            isSelected
+                                ? Colors.blueAccent.withOpacity(0.1)
+                                : null, // Change background color when selected
+                        title: Column(
+                          mainAxisSize:
+                              MainAxisSize.min, // Prevent unnecessary space
+                          children:
+                              words
+                                  .map(
+                                    (word) => Text(
+                                      word,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight:
+                                            isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight
+                                                    .normal, // Bold text when selected
+                                        color:
+                                            isSelected
+                                                ? Colors.blueAccent
+                                                : Colors.black,
+                                        fontSize: 22.5, // Increased font size
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                        ),
+                        trailing:
+                            isSelected
+                                ? Container(
+                                  width: 5,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Colors
+                                            .blueAccent, // Blue box when selected
+                                    borderRadius: BorderRadius.circular(
+                                      4,
+                                    ), // Rounded corners for the box
+                                  ),
+                                )
+                                : null, // No box when not selected
+                        onTap: () {
+                          setState(() {
+                            _selectedCategory = category;
+                          });
+                        },
+                      ),
                     );
                   },
                 ),
               ),
-
             ],
           ),
         ),

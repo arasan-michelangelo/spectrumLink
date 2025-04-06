@@ -126,6 +126,30 @@ flutter:
     - assets/images/wave.png
     - assets/images/wc.webp
     - assets/images/write_it.webp
+    - assets/images/1f60a.png
+    - assets/images/1f60e.png
+    - assets/images/1f60d.png
+    - assets/images/1f61b.png
+    - assets/images/1f61c.png
+    - assets/images/1f60f.png
+    - assets/images/1f62f.png
+    - assets/images/1f62c.png
+    - assets/images/1f62d.png
+    - assets/images/1f61e.png
+    - assets/images/1f91a.png
+    - assets/images/1f9d0.png
+    - assets/images/2753.png
+    - assets/images/203c-fe0f.png
+    - assets/images/26a0-fe0f.png
+    - assets/images/1f44b.png     # 👋 Waving Hand
+    - assets/images/1f91a.png     # 🤚 Raised Back of Hand
+    - assets/images/1f590-fe0f.png    # 🖐️ Hand with Fingers Splayed
+    - assets/images/270b.png      # ✋ Raised Hand
+    - assets/images/1f64b.png     # 🙋 Person Raising Hand
+    - assets/images/SpectrumLink_Logo.png
+
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

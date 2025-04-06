@@ -15,8 +15,25 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Settings"),
+        title: const Text(
+          'Settings',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: 1.2, // Adds letter spacing for a modern look
+          ),
+        ),
         backgroundColor: Colors.blue.shade700,
+        elevation: 10, // Adds a subtle shadow for better separation
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
+        ),
+        toolbarHeight: 80, // Makes the AppBar taller
+        centerTitle: true,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -31,7 +48,8 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             const Text(
               "Preferences",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
             const SizedBox(height: 10),
             _buildSwitchTile(
@@ -55,7 +73,8 @@ class _SettingsPageState extends State<SettingsPage> {
             const Divider(),
             const Text(
               "Account",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
             const SizedBox(height: 10),
             _buildListTile(
@@ -75,7 +94,8 @@ class _SettingsPageState extends State<SettingsPage> {
             const Divider(),
             const Text(
               "Support",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
             const SizedBox(height: 10),
             _buildListTile(
@@ -99,20 +119,38 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildSwitchTile({required String title, required bool value, required Function(bool) onChanged}) {
-    return SwitchListTile(
-      title: Text(title),
-      value: value,
-      onChanged: onChanged,
-      activeColor: Colors.blue,
+    return Card(
+      margin: const EdgeInsets.only(bottom: 15),
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: SwitchListTile(
+        title: Text(title),
+        value: value,
+        onChanged: onChanged,
+        activeColor: Colors.blue,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+      ),
     );
   }
 
   Widget _buildListTile({required String title, required IconData icon, required VoidCallback onTap}) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.blue.shade700),
-      title: Text(title),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: onTap,
+    return Card(
+      margin: const EdgeInsets.only(bottom: 15),
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.blue.shade700),
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.blue),
+        onTap: onTap,
+      ),
     );
   }
 }

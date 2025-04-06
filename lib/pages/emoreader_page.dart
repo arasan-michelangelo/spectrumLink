@@ -169,69 +169,104 @@ class _CameraScreenState extends State<EmoreaderPage> {
     }
   }
 
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Live Emotion Detection'),
-        centerTitle: true,
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFEEE6FF),
+            Color(0xFFD2E3FF),
+          ], // Light purple to blue gradient
+        ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 250,
-                height: 250,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: _capturedImage != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.file(_capturedImage!, fit: BoxFit.cover),
-                      )
-                    : _isCameraInitialized
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: _buildCameraPreview(),
-                          )
-                        : const Center(
-                            child: Icon(Icons.camera_alt, size: 50, color: Colors.grey),
-                          ),
-              ),
-              const SizedBox(height: 20),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: _result.split('\n').map((line) => 
-                      Text(line, textAlign: TextAlign.center)
-                    ).toList(),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Title and Description
+            Column(
+              children: [
+                Text(
+                  "EmoReader 🎭",
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
+                const SizedBox(height: 8),
+                Text(
+                  "Use your device's camera and microphone to read and classify emotions in real time.",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+              ],
+            ),
+
+            // Camera Preview or Captured Image
+            Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(height: 20),
-              if (_isCameraInitialized)
-                Column(
-                  children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          //Switch camera button
-                          ElevatedButton(
-                            onPressed: _isProcessing ? null : _switchCamera,
-                            child: const Text('Switch Camera'),
-                          ),
+              child: _capturedImage != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.file(_capturedImage!, fit: BoxFit.cover),
+                    )
+                  : _isCameraInitialized
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: _buildCameraPreview(),
+                        )
+                      : const Center(
+                          child: Icon(Icons.camera_alt, size: 50, color: Colors.grey),
+                        ),
+            ),
 
-                          const SizedBox(width: 10),
+            const SizedBox(height: 20),
 
-                            //Stream button
-                            _isStreaming
+            // Result Card
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: _result
+                      .split('\n')
+                      .map((line) => Text(line, textAlign: TextAlign.center))
+                      .toList(),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Buttons: Switch Camera and Stream Control
+            if (_isCameraInitialized)
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _isProcessing ? null : _switchCamera,
+                        child: const Text('Switch Camera'),
+                      ),
+                      const SizedBox(width: 10),
+                      _isStreaming
                           ? ElevatedButton(
                               onPressed: _stopEmotionStream,
                               child: const Text('Stop Stream'),
@@ -240,16 +275,17 @@ class _CameraScreenState extends State<EmoreaderPage> {
                               onPressed: _startEmotionStream,
                               child: const Text('Start Stream'),
                             ),
-                        ]
-                      ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-            ],
-          ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
