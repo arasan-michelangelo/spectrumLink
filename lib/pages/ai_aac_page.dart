@@ -212,6 +212,23 @@ class _AIAccTabState extends State<AIAccTab> {
     });
   }
 
+   void _scrollToBottom() {
+    Future.delayed(Duration(milliseconds: 100), () {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
+  }
+
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -263,41 +280,42 @@ class _AIAccTabState extends State<AIAccTab> {
           ),
         )
       : ListView(
-          children: _chatHistory.map((chat) {
-            bool isUser = chat["sender"] == "User";
-            return Column(
-              crossAxisAlignment: isUser
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
-              children: [
-                Text(
-                  isUser ? "You" : "AI Assistant",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isUser ? Colors.blue : Colors.green,
-                  ),
-                ),
-                Column(
-                  children: chat["messages"].map<Widget>((msg) {
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      decoration: BoxDecoration(
+              controller: _scrollController, // Add the controller here
+              children: _chatHistory.map((chat) {
+                bool isUser = chat["sender"] == "User";
+                return Column(
+                  crossAxisAlignment:
+                      isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isUser ? "You" : "AI Assistant",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: isUser ? Colors.blue : Colors.green,
-                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text(
-                        msg,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            );
-          }).toList(),
-        ),
+                    ),
+                    Column(
+                      children: chat["messages"].map<Widget>((msg) {
+                        return Container(
+                          padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          decoration: BoxDecoration(
+                            color: isUser ? Colors.blue : Colors.green,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            msg,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
 ),
+
 
 
         Padding(
