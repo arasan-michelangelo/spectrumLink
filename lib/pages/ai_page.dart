@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spectrum_link/pages/ai_companion_page.dart'; // Import AI Companion Page
-import 'package:spectrum_link/pages/camera_mic_page.dart'; // Import Camera/Mic Page
+import 'package:spectrum_link/pages/ai_companion_page.dart'; 
+import 'package:spectrum_link/pages/emoreader_page.dart';
+import 'package:spectrum_link/pages/emotion_classifier.dart'; 
 
 class AIPage extends StatelessWidget {
   const AIPage({super.key});
@@ -65,12 +66,16 @@ class AIPage extends StatelessWidget {
                   // Camera/Mic Section
                   _buildFeatureCard(
                     context,
-                    title: "Camera / Mic",
+                    title: "EmoReader",
                     icon: Icons.camera_alt,
                     color: Colors.green,
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CameraMicPage()),
+                      MaterialPageRoute(builder: (context) {
+                        final classifier = EmotionClassifier();
+                        classifier.loadModel(); // Load the model first
+                        return EmoreaderPage(classifier: classifier);
+                      }),
                     ),
                   ),
                 ],

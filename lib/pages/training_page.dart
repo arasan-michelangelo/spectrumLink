@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:spectrum_link/pages/chat_bubble.dart';
+import 'package:spectrum_link/pages/give_direction.dart';
+import 'package:spectrum_link/pages/interview.dart';
+import 'package:spectrum_link/pages/order_coffee.dart';
+import 'package:spectrum_link/pages/small_talk.dart';
+
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({super.key});
@@ -111,56 +115,74 @@ class _TrainingPageState extends State<TrainingPage> {
     );
   }
 
-  void _showScenarioModal(BuildContext context, Map<String, dynamic> scenario) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(scenario['icon'], size: 50, color: Colors.blueAccent),
-              const SizedBox(height: 10),
-              Text(
-                scenario['title'],
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                scenario['description'],
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(scenario: scenario),
-                    ),
-                  );
-                },
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                  child: Text("Start Training", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+ void _showScenarioModal(BuildContext context, Map<String, dynamic> scenario) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(scenario['icon'], size: 50, color: Colors.blueAccent),
+            const SizedBox(height: 10),
+            Text(
+              scenario['title'],
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              scenario['description'],
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+              onPressed: () {
+                Navigator.pop(context);
+
+                // Routing logic based on scenario title
+                Widget nextPage;
+                switch (scenario['title']) {
+                  case "Ordering Coffee":
+                    nextPage = const OrderCoffeePage();
+                    break;
+                  case "Job Interview":
+                    nextPage = const InterviewPage();
+                    break;
+                  case "Asking for Directions":
+                    nextPage = const GiveDirectionPage();
+                    break;
+                  case "Small Talk":
+                    nextPage = const SmallTalkPage();
+                    break;
+                  default:
+                    return;
+                }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => nextPage),
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                child: Text("Start Training", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 }
