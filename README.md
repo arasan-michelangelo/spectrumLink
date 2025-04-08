@@ -1,26 +1,21 @@
-# AI-AAC
-PYthon Backend file (with Vertex AI) for AI-AAC features.
+# SpectrumLink
 
-# Donwload the following packages:
+SpectrumLink is an AI-powered Flutter mobile app designed to support individuals on the autism spectrum through three AI core features:
 
-pip install python-dotenv --user     
-pip install Flask --user
+- **EmoReader**: Real-time facial emotion recognition using TensorFlow Lite
+- **AI-AAC**: AI-powered augmentative communication using card input + Vertex AI
+- **AI-Companion**: Scenario-based chatbot for social training
 
-# Install and login the firebase with the specific account and project name
+## 🚀 Technologies Used
 
-# Create a .env file and assign the following value:
+- Flutter
+- Firebase Firestore
+- TensorFlow Lite
+- Cloud Run
+- Vertex AI (Gemini 2.0 Flash)
 
-FIRESTORE_PROJECT_NAME=    
-LOCATION=  
-VERTEX_MODEL_ID=      
-VERTEX_PROJECT_ID=
+## 📱 How to Run
 
-# Type the following at the terminal to run:
-python app.py
-
-# Tips:
-To test if the backend file is working, run the app.py and copy and paste the following command and at command prompt
-
- curl -X POST http://127.0.0.1:5000/process-aac ^
-      -H "Content-Type: application/json" ^
-      -d "{\"card_1\": \"Hello\", \"card_2\": \"I\", \"card_3\": \"Want\", \"card_4\": \"To\", \"card_5\": \"Talk\"}"
+1. Clone this repo:
+   ```bash
+   git clone https://github.com/arasan-michelangelo/spectrumLink.git
