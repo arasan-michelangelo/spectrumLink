@@ -1,21 +1,21 @@
-# spectrum_link
+# SpectrumLink
 
-A new Flutter project.
+SpectrumLink is an AI-powered Flutter mobile app designed to support individuals on the autism spectrum through three AI core features:
 
-## Getting Started
+- **EmoReader**: Real-time facial emotion recognition using TensorFlow Lite
+- **AI-AAC**: AI-powered augmentative communication using card input + Vertex AI
+- **AI-Companion**: Scenario-based chatbot for social training
 
-This project is a starting point for a Flutter application.
+## 🚀 Technologies Used
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter
+- Firebase Firestore
+- TensorFlow Lite
+- Cloud Run
+- Vertex AI (Gemini 2.0 Flash)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 📱 How to Run
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-# Login Firestore 
-https://firebase.google.com/docs/flutter/setup?platform=android
-
-# spectrumLink
+1. Clone this repo:
+   ```bash
+   git clone https://github.com/arasan-michelangelo/spectrumLink.git
