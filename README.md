@@ -16,6 +16,13 @@ SpectrumLink is an AI-powered Flutter mobile app designed to support individuals
 
 ## 📱 How to Run
 
-1. Clone this repo:
+1. Clone the main repo:
    ```bash
    git clone https://github.com/arasan-michelangelo/spectrumLink.git
+
+To run the flutter app, type the following command on the terminal, and all the AI features is ready to use
+   ```bash
+   flutter run
+
+
+
